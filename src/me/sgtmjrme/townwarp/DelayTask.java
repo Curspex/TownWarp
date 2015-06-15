@@ -1,4 +1,4 @@
-package me.SgtMjrME.TownWarp;
+package me.sgtmjrme.townwarp;
 
 import java.util.TimerTask;
 

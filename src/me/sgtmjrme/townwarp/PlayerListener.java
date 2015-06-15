@@ -1,8 +1,10 @@
-package me.SgtMjrME.TownWarp;
+package me.sgtmjrme.townwarp;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -85,7 +87,7 @@ public class PlayerListener implements Listener{
 	{
 		if (!plugin.isProtected())
 			return;
-		Location check = e.getPlayer().getTargetBlock(null, 100).getLocation();
+		Location check = e.getPlayer().getTargetBlock((Set<Material>) null, 100).getLocation();
 		check.add(0, 1, 0);
 		if (plugin.checkBoxLarge(check))
 			e.setCancelled(true);

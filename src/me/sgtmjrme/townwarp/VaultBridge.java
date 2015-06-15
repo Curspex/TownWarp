@@ -1,16 +1,16 @@
-package me.SgtMjrME.TownWarp;
+package me.sgtmjrme.townwarp;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class vaultBridge {
+public class VaultBridge {
     
     public static TownWarp plugin;
     public Economy economy = null;
     public boolean foundEconomy = false;
     public String economyName = "";
     
-    public vaultBridge (TownWarp instance) {
+    public VaultBridge (TownWarp instance) {
         plugin = instance;
         initEconomy();
     }

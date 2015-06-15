@@ -1,8 +1,10 @@
 name: TownWarp
-main: me.SgtMjrME.TownWarp.TownWarp
-version: 0.01
+main: me.sgtmjrme.townwarp.townwarp
+version: 0.01.1
 description: Announcer to warp players to random towns.
-softdepend: [vault,PermissionsEx]
+softdepend: [vault, PermissionsEx]
+authors: [SgtMjrME, Omnivion]
+website: https://github.com/curspex/townwarp
 
 commands:
     townwarp:

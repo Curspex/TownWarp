@@ -1,4 +1,4 @@
-package me.SgtMjrME.TownWarp;
+package me.sgtmjrme.townwarp;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,7 +39,7 @@ public class TownWarp extends JavaPlugin{
 	private boolean welcomeOn;
 	private String infoMessage;
 	private boolean infoOn;
-	private vaultBridge vault;
+	private VaultBridge vault;
 	private double cost;
 	private HashMap<String, Location> protect = new HashMap<String, Location>();
 	private boolean protectOn;
@@ -50,7 +50,7 @@ public class TownWarp extends JavaPlugin{
 		log = getServer().getLogger();
 		pm = getServer().getPluginManager();
 		folder = "plugins/TWData";
-		vault = new vaultBridge(this);
+		vault = new VaultBridge(this);
 		try{
 			File duck = new File(folder);
 			if (!duck.exists())
@@ -264,7 +264,7 @@ public class TownWarp extends JavaPlugin{
 		else if ((player.hasPermission("TW.use") || player.hasPermission("TW.mod")
 				|| player.isOp()) && commandLabel.equalsIgnoreCase("twset"))
 		{// Set your given announcement
-			if (!vault.economy.has(player.getName(), cost) && !player.hasPermission("TW.mod"))
+			if (!vault.economy.has(player, cost) && !player.hasPermission("TW.mod"))
 			{
 				player.sendMessage(ChatColor.RED + "You don't have enough! You need $" + cost + " to create a town warp!");
 				return true;
@@ -279,7 +279,7 @@ public class TownWarp extends JavaPlugin{
 			{
 				if (!vault.foundEconomy)
 					return true;
-				vault.economy.withdrawPlayer(player.getName(), cost);
+				vault.economy.withdrawPlayer(player, cost);
 				player.sendMessage(ChatColor.GREEN + "$" + cost + " removed from your account");
 			}
 		}
@@ -507,7 +507,7 @@ public class TownWarp extends JavaPlugin{
 	private void restartTimer()
 	{
 		getServer().getScheduler().cancelTasks(this);
-		getServer().getScheduler().scheduleAsyncDelayedTask(this, new AnnounceTime(this), (long) timeDelay);
+		getServer().getScheduler().runTaskTimerAsynchronously(this, new AnnounceTime(this), (long) timeDelay, (long) timeDelay);
 	}
 
 	public boolean checkBlocks(Location location) {
@@ -569,10 +569,16 @@ public class TownWarp extends JavaPlugin{
 				for(double y = Math.floor(location.getY()) - 1; y < Math.floor(location.getY() + 3); y++)
 				{
 					Location test = new Location (location.getWorld(), x, y, z);
-					int typeid = test.getBlock().getTypeId();
-					if (typeid == 8 || typeid == 9 || typeid == 10 || typeid == 11)
+					switch (test.getBlock().getType())
 					{
-						return true;
+						case WATER:
+						case STATIONARY_WATER:
+						case LAVA:
+						case STATIONARY_LAVA:
+							return true;
+						
+						default:
+							break;
 					}
 				}
 			}
