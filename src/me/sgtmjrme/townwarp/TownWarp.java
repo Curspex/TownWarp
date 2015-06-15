@@ -12,6 +12,9 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import me.sgtmjrme.townwarp.hook.VaultBridge;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -26,9 +29,10 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class TownWarp extends JavaPlugin{
-	private Logger log;
-	private PluginManager pm;
-	private PlayerListener playerListener;
+
+
+
+
 	private String folder;
 	private Random rand = new Random();
 	private Location l;
@@ -47,8 +51,6 @@ public class TownWarp extends JavaPlugin{
 	@Override
 	public void onEnable()
 	{
-		log = getServer().getLogger();
-		pm = getServer().getPluginManager();
 		folder = "plugins/TWData";
 		vault = new VaultBridge(this);
 		try{
@@ -60,15 +62,11 @@ public class TownWarp extends JavaPlugin{
 		}
 		catch(Exception e)
 		{
-			log.info("Could not create folder");
-			pm.disablePlugin(this);
+			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
 		l = new Location(null, 0, 0, 0);
-		reset();
-		playerListener = new PlayerListener(this, config.getLong("delay")*20);
-		pm.registerEvents(playerListener, this);
-		log.info("[TownWarp] Loaded");
+		activate();
 	}
 	
 	@Override
@@ -77,45 +75,25 @@ public class TownWarp extends JavaPlugin{
 		getServer().getScheduler().cancelTasks(this);
 	}
 	
-	private void reset()
-	{
-		loadConfig();
-		timeDelay = config.getDouble("delayAnnounce", 5.)*60*20;
-		noFile = config.getString("nofile", "file not found");
-		welcomeMessage = config.getString("welcome", "");
-		welcomeOn = config.getBoolean("welcomeOn", false);
-		infoMessage = config.getString("info", "/tw to warp to town");
-		infoOn = config.getBoolean("infoOn", true);
-		cost = config.getDouble("cost", 0);
-		protectOn = config.getBoolean("protect", false);//Defaults off
-		protect.clear();
-		if (protectOn) loadAllLocations();
-		activate();
-	}
-	
 	private void loadAllLocations()
 	{
 		File f = new File(folder);
 		String[] allAnn = f.list();
 		for (int x = 0; x < allAnn.length; x++)
 		{
-			try{
-			BufferedReader in = new BufferedReader(new FileReader(folder + "/" + allAnn[x]));
-			protect.put(allAnn[x].toLowerCase(), str2Loc(in.readLine()));
-			in.close();
+			try
+			{
+				BufferedReader in = new BufferedReader(new FileReader(folder + "/" + allAnn[x]));
+				protect.put(allAnn[x].toLowerCase(), str2Loc(in.readLine()));
+				in.close();
 			}
 			catch (Exception e)
 			{
-				log.info("[WARNING] Could not load location protections for " + allAnn[x]);
+				this.getLogger().info("[WARNING] Could not load location protections for " + allAnn[x]);
 			}
 		}
 		
-		log.info("[TownWarp] Protections loaded");
-	}
-	
-	private void loadConfig() {
-		File configFile = new File(getDataFolder(), "config.yml");
-	    config = YamlConfiguration.loadConfiguration(configFile);
+		this.getLogger().info("[TownWarp] Protections loaded");
 	}
 	
 	@Override

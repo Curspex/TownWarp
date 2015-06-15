@@ -1,6 +1,8 @@
-package me.sgtmjrme.townwarp;
+package me.sgtmjrme.townwarp.hook;
 
+import me.sgtmjrme.townwarp.TownWarp;
 import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class VaultBridge {
